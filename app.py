@@ -669,7 +669,6 @@ with col_left:
                             {
                                 "Record": np.arange(1, len(predicted_display) + 1),
                                 "Predicted class": predicted_display,
-                                "Confidence (%)": np.round(confidence_values, 2),
                             }
                         )
 
@@ -710,23 +709,15 @@ with col_right:
         if analysis["type"] == "single":
             result = analysis["result"]
             label = get_display_class_name(result["predicted_label"])
-            confidence = result["confidence_pct"]
             is_normal = label == "Normal"
             if analysis.get("approximate"):
                 st.info("Quick prediction mode relies on partial traffic inputs and therefore produces an approximate model output.")
 
             st.markdown('<div class="panel-card">', unsafe_allow_html=True)
-            col_metric_1, col_metric_2 = st.columns(2)
-            with col_metric_1:
-                st.markdown(
-                    f'<div class="metric-box"><span class="metric-label">Predicted Class</span><div class="metric-value">{label}</div></div>',
-                    unsafe_allow_html=True,
-                )
-            with col_metric_2:
-                st.markdown(
-                    f'<div class="metric-box"><span class="metric-label">Prediction Confidence</span><div class="metric-value">{confidence:.2f}%</div></div>',
-                    unsafe_allow_html=True,
-                )
+            st.markdown(
+                f'<div class="metric-box"><span class="metric-label">Predicted Class</span><div class="metric-value">{label}</div></div>',
+                unsafe_allow_html=True,
+            )
             st.write("")
             if is_normal:
                 st.success("Security Classification: normal traffic")
@@ -764,7 +755,7 @@ with col_right:
                     unsafe_allow_html=True,
                 )
             st.write("")
-            st.markdown('<div class="section-title">Predicted Class and Confidence</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">Predicted Class</div>', unsafe_allow_html=True)
             st.dataframe(results, use_container_width=True)
             st.markdown('<div class="section-title">Predicted Class Distribution</div>', unsafe_allow_html=True)
             class_distribution = results["Predicted class"].value_counts().reindex(["Normal", "DoS", "Probe", "R2L", "U2R"], fill_value=0)
